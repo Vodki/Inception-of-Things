@@ -1,7 +1,8 @@
 #!/bin/bash
 
 echo ">>> [Server] Updating packages..."
-sudo dnf update -y
+sudo apt-get update -y
+sudo apt-get install -y curl
 
 echo ">>> [Server] Installing k3s server..."
 # Installe k3s server. L'option --write-kubeconfig-mode est souvent utile.
@@ -17,6 +18,10 @@ done
 echo ">>> [Server] Copying node token to shared scripts directory..."
 # Copie le token dans le dossier partagé pour que le worker puisse le lire
 # /home/vagrant/scripts est le point de montage DANS la VM
-sudo cp /var/lib/rancher/k3s/server/node-token /home/vagrant/scripts/k3s_token
+# sudo cp /var/lib/rancher/k3s/server/node-token /home/vagrant/scripts/k3s_token
+
+sudo cat /var/lib/rancher/k3s/server/node-token > /home/vagrant/scripts/k3s_token
+
+sync
 
 echo ">>> [Server] Server setup complete."

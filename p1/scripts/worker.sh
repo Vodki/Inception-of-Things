@@ -1,7 +1,8 @@
 #!/bin/bash
 
 echo ">>> [Worker] Updating packages..."
-sudo dnf update -y
+sudo apt-get update -y
+sudo apt-get install -y curl
 
 # Définit l'URL du serveur K3s en utilisant l'IP fixe définie dans le Vagrantfile
 export K3S_URL="https://192.168.56.110:6443"
@@ -29,6 +30,6 @@ fi
 echo ">>> [Worker] Token read successfully. Installing k3s agent..."
 # Exécute l'installation de l'agent K3s AVEC les variables K3S_URL et K3S_TOKEN
 # Note: Pas besoin de sudo ici car le script get.k3s.io le gère lui-même
-curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="agent" sh -
+sudo curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="agent --server ${K3S_URL}" sh -
 
 echo ">>> [Worker] Worker setup complete."
