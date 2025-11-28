@@ -16,3 +16,23 @@ spec:
             name: argocd-server
             port:
               name: http
+
+# ============================================
+# UTILISATION :
+# ============================================
+# 1. Appliquer cette ingress :
+#    kubectl apply -f ingress.yaml
+#
+# 2. Configurer ArgoCD en mode insecure (HTTP) :
+#    kubectl patch configmap argocd-cmd-params-cm -n argocd --type merge -p '{"data":{"server.insecure":"true"}}'
+#    kubectl rollout restart deployment argocd-server -n argocd
+#
+# 3. Accéder à ArgoCD via :
+#    http://argocd.localhost:8080
+#    (le port 8080 car k3d mappe le port 80 du cluster vers 8080 sur l'hôte)
+#
+# 4. Récupérer le mot de passe admin :
+#    kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+#
+# Username: admin
+# ============================================
