@@ -1,0 +1,69 @@
+# ============================================
+# ArgoCD Application - Déploiement automatique
+# ============================================
+# Cette ressource indique à ArgoCD de surveiller un repo Git
+# et de déployer automatiquement les manifests Kubernetes
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  # Nom de l'application dans ArgoCD (visible dans l'UI)
+  name: playground-app
+  # IMPORTANT: L'Application doit être dans le namespace argocd
+  # car c'est là qu'ArgoCD surveille les ressources Application
+  namespace: argocd
+
+spec:
+  # Projet ArgoCD (default = projet par défaut avec toutes les permissions)
+  project: default
+
+  # ============================================
+  # SOURCE : D'où viennent les manifests Kubernetes
+  # ============================================
+  source:
+    # URL du repository Git à surveiller
+    repoURL: https://github.com/Vodki/Inception-of-Things.git
+    # Branche/tag/commit à suivre (HEAD = dernière version de la branche par défaut)
+    targetRevision: HEAD
+    # Chemin dans le repo où se trouvent les manifests YAML à déployer
+    # IMPORTANT: Utiliser un sous-dossier dédié pour éviter de déployer les fichiers ArgoCD
+    path: p3/app
+
+  # ============================================
+  # DESTINATION : Où déployer les ressources
+  # ============================================
+  destination:
+    # URL du cluster Kubernetes cible
+    # "https://kubernetes.default.svc" = le cluster local où ArgoCD est installé
+    server: https://kubernetes.default.svc
+    # Namespace où les ressources seront déployées
+    namespace: dev
+
+  # ============================================
+  # SYNC POLICY : Comment synchroniser
+  # ============================================
+  syncPolicy:
+    # automated = synchronisation automatique (sans intervention manuelle)
+    automated:
+      # prune: supprime les ressources du cluster qui ne sont plus dans Git
+      prune: true
+      # selfHeal: remet l'état du cluster conforme à Git si quelqu'un modifie manuellement
+      selfHeal: true
+
+# ============================================
+# UTILISATION :
+# ============================================
+# 1. Appliquer cette Application :
+#    kubectl apply -f application.yaml
+#
+# 2. Vérifier dans ArgoCD UI (http://argocd.localhost:8080) :
+#    - L'application "playground-app" doit apparaître
+#    - Status doit être "Synced" et "Healthy"
+#
+# 3. Vérifier le déploiement dans le namespace dev :
+#    kubectl get all -n dev
+#
+# 4. Pour tester la sync automatique :
+#    - Modifier un fichier dans le repo GitHub
+#    - ArgoCD détecte le changement et redéploie automatiquement
+# ============================================
