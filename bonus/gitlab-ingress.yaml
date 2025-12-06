@@ -1,0 +1,28 @@
+# ============================================
+# Ingress pour GitLab (si l'ingress Helm ne fonctionne pas)
+# ============================================
+# Cette ingress permet d'accéder à GitLab via gitlab.localhost:8080
+# Normalement le chart Helm crée ses propres ingress, mais
+# ce fichier peut servir de backup ou de référence
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gitlab-webservice-ingress
+  namespace: gitlab
+  annotations:
+    # Traefik annotations
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: gitlab.localhost
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: gitlab-webservice-default
+                port:
+                  number: 8181

@@ -1,0 +1,74 @@
+# ============================================
+# ArgoCD Application - Déploiement automatique via GitLab LOCAL
+# ============================================
+# Cette Application remplace celle de p3 pour utiliser
+# l'instance GitLab locale au lieu de GitHub
+#
+# PRÉREQUIS avant d'appliquer ce fichier :
+# 1. GitLab doit être installé et accessible
+# 2. Un projet "playground-app" doit exister dans GitLab
+# 3. Les manifests (deployment.yaml, ingress.yaml) doivent être pushés
+# 4. ArgoCD doit avoir accès au repo GitLab (voir ci-dessous)
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  # Même nom que l'application p3 pour l'overwrite
+  name: playground-app
+  namespace: argocd
+
+spec:
+  project: default
+
+  # ============================================
+  # SOURCE : GitLab LOCAL (au lieu de GitHub)
+  # ============================================
+  source:
+    # URL du repo GitLab local
+    # Format: http://gitlab-webservice-default.gitlab.svc.cluster.local:8181/<user>/<project>.git
+    # OU via l'ingress: http://gitlab.localhost/<user>/<project>.git
+    repoURL: http://gitlab.localhost:8080/root/playground-app.git
+    targetRevision: HEAD
+    # Chemin vers les manifests dans le repo
+    path: .
+
+  # ============================================
+  # DESTINATION : Namespace dev
+  # ============================================
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+
+  # ============================================
+  # SYNC POLICY : Synchronisation automatique
+  # ============================================
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+
+# ============================================
+# CONFIGURATION ARGOCD POUR GITLAB LOCAL
+# ============================================
+# Avant d'appliquer cette Application, il faut configurer
+# ArgoCD pour qu'il puisse accéder au repo GitLab local.
+#
+#   - Créer le projet en mode "Public" dans GitLab
+#
+# ============================================
+# UTILISATION :
+# ============================================
+# 1. S'assurer que GitLab est UP:
+#    kubectl get pods -n gitlab
+#
+# 2. Créer le projet dans GitLab et pusher les manifests
+#
+# 3. (Si repo privé) Configurer l'accès ArgoCD
+#
+# 4. Appliquer cette Application (écrase celle de p3):
+#    kubectl apply -f application.yaml
+#
+# 5. Vérifier dans ArgoCD UI: http://argocd.localhost:8080
+# ============================================
