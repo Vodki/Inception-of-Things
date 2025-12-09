@@ -73,13 +73,13 @@ Test the ingress routing using curl:
 
 ```bash
 # Test app1
-curl -H "Host: app1.com" http://localhost:8080/
+curl -H "Host: app1.com" http://localhost:80/
 
 # Test app2
-curl -H "Host: app2.com" http://localhost:8080/
+curl -H "Host: app2.com" http://localhost:80/
 
 # Test app3
-curl -H "Host: app3.com" http://localhost:8080/
+curl -H "Host: app3.com" http://localhost:80/
 ```
 
 Each should return an HTML page with the respective app's message.
