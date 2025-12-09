@@ -24,10 +24,9 @@ spec:
   # SOURCE : GitLab LOCAL (au lieu de GitHub)
   # ============================================
   source:
-    # URL du repo GitLab local
-    # Format: http://gitlab-webservice-default.gitlab.svc.cluster.local:8181/<user>/<project>.git
-    # OU via l'ingress: http://gitlab.localhost/<user>/<project>.git
-    repoURL: http://gitlab.localhost:8080/root/playground-app.git
+    # URL du repo GitLab local - utiliser l'URL interne au cluster
+    # car ArgoCD tourne dans le cluster et ne peut pas accéder à localhost
+    repoURL: http://gitlab-webservice-default.gitlab.svc.cluster.local:8181/root/playground-app.git
     targetRevision: HEAD
     # Chemin vers les manifests dans le repo
     path: .
