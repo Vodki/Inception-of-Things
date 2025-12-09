@@ -4,6 +4,12 @@
 # Setup script for Bonus - GitLab local
 # ============================================
 
+if [[ $EUID -ne 0 ]]; then
+   echo "Ce script doit être exécuté en tant que root (utilisez sudo)." 
+   exit 1
+fi
+
+
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -47,12 +53,11 @@ log_success "Repo Helm GitLab ajouté"
 # ============================================
 log_info "Installation de GitLab (cela peut prendre plusieurs minutes)..."
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CONFS_DIR="${SCRIPT_DIR}/confs"
+
 
 helm upgrade --install gitlab gitlab/gitlab \
     --namespace gitlab \
-    --values "${CONFS_DIR}/gitlab-values.yaml" \
+    --values "./gitlab-values.yaml" \
     --timeout 10m \
     --wait
 
@@ -83,6 +88,7 @@ log_info "============================================"
 log_info "Prochaines étapes:"
 log_info "1. Connectez-vous à GitLab"
 log_info "2. Créez un projet nommé 'playground-app'"
-log_info "3. Poussez les manifests de bonus/app/ vers ce projet"
-log_info "4. Appliquez application.yaml"
+log_info "3. Changez l'email dans bonus/setup2.sh avant de l'exécuter"
+log_info "4. Poussez les manifests de bonus/app/ vers ce projet"
+log_info "5. Appliquez application.yaml"
 log_info "============================================"
