@@ -1,8 +1,12 @@
 #!/bin/bash
 
+echo ">>> [Fix] Setting DNS to 8.8.8.8..."
+echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf > /dev/null
+
 echo ">>> [Server] Updating packages..."
 sudo apt-get update -y
 sudo apt-get install -y curl
+
 
 echo ">>> [Server] Installing k3s server..."
 # Installe k3s server. L'option --write-kubeconfig-mode est souvent utile.

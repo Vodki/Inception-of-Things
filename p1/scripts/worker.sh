@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo ">>> [Fix] Setting DNS to 8.8.8.8..."
+echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf > /dev/null
+
 echo ">>> [Worker] Updating packages..."
 sudo apt-get update -y
 sudo apt-get install -y curl
@@ -30,6 +33,6 @@ fi
 echo ">>> [Worker] Token read successfully. Installing k3s agent..."
 # Exécute l'installation de l'agent K3s AVEC les variables K3S_URL et K3S_TOKEN
 # Note: Pas besoin de sudo ici car le script get.k3s.io le gère lui-même
-sudo curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="agent --server ${K3S_URL}" sh -
+curl -sfL https://get.k3s.io | K3S_URL="${K3S_URL}" K3S_TOKEN="${K3S_TOKEN}" sh -
 
 echo ">>> [Worker] Worker setup complete."
