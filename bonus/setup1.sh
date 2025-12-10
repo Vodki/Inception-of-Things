@@ -9,6 +9,8 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
+# Configure KUBECONFIG for k3s
+export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 
 # Colors
 RED='\033[0;31m'
@@ -78,7 +80,7 @@ log_info "============================================"
 log_info "GitLab est installé !"
 log_info "============================================"
 log_info ""
-log_info "URL: http://gitlab.localhost:8080"
+log_info "URL: http://gitlab.localhost"
 log_info ""
 log_info "Username: root"
 log_info "Password:"
