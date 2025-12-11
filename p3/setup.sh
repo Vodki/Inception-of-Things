@@ -25,7 +25,7 @@ kubectl apply -n argocd -f application.yaml
 echo ""
 echo "============================================"
 echo "ArgoCD is ready!"
-echo "URL: http://argocd.localhost:8080"
+echo "URL: http://argocd.localhost"
 echo "Username: admin"
 echo -n "Password: "
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d

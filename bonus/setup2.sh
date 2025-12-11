@@ -10,7 +10,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 rm -rf /tmp/playground-app
-git clone http://gitlab.localhost:8080/root/playground-app.git /tmp/playground-app
+git clone http://gitlab.localhost/root/playground-app.git /tmp/playground-app
 cp -r ./app/* /tmp/playground-app/
 
 cd /tmp/playground-app
