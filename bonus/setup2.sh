@@ -16,7 +16,7 @@ cp -r ./app/* /tmp/playground-app/
 cd /tmp/playground-app
 
 # Email generé par GitLab (a changer avant de lancer le script)
-git config --local user.email "gitlab_admin_c70b80@example.com"
+git config --local user.email "gitlab_admin_437e0c@example.com"
 git config --local user.name "Administrator"
 
 git add .
