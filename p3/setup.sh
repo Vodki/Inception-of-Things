@@ -4,11 +4,10 @@ if [[ $EUID -ne 0 ]]; then
    echo "Ce script doit être exécuté en tant que root (utilisez sudo)." 
    exit 1
 fi
-
+curl -sfL https://get.k3s.io | sh -
 k3d cluster create IoT -p "8080:80@loadbalancer" -p "8443:443@loadbalancer"
 kubectl create namespace argocd
 kubectl create namespace dev
-kubens argocd
 kubectl apply -n argocd -f ingress.yaml
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
