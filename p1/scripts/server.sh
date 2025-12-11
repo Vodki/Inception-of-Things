@@ -10,7 +10,8 @@ sudo apt-get install -y curl
 
 echo ">>> [Server] Installing k3s server..."
 # Installe k3s server. L'option --write-kubeconfig-mode est souvent utile.
-curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --write-kubeconfig-mode=644" sh -
+# --node-ip ensures this node uses the host-only network IP (192.168.56.110)
+curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --write-kubeconfig-mode=644 --node-ip=192.168.56.110" sh -
 
 echo ">>> [Server] Waiting for node token..."
 # Attendre que le fichier token existe (peut prendre quelques secondes)

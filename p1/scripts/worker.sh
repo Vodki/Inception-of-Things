@@ -33,6 +33,7 @@ fi
 echo ">>> [Worker] Token read successfully. Installing k3s agent..."
 # Exécute l'installation de l'agent K3s AVEC les variables K3S_URL et K3S_TOKEN
 # Note: Pas besoin de sudo ici car le script get.k3s.io le gère lui-même
-curl -sfL https://get.k3s.io | K3S_URL="${K3S_URL}" K3S_TOKEN="${K3S_TOKEN}" sh -
+# --node-ip ensures this node uses the host-only network IP (192.168.56.111)
+curl -sfL https://get.k3s.io | K3S_URL="${K3S_URL}" K3S_TOKEN="${K3S_TOKEN}" INSTALL_K3S_EXEC="agent --node-ip=192.168.56.111" sh -
 
 echo ">>> [Worker] Worker setup complete."

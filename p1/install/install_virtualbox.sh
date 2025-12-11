@@ -5,6 +5,28 @@ set -e
 
 echo "--- Démarrage de l'installation de VirtualBox pour Ubuntu 24.04 ---"
 
+# 0. Vérifier la présence de modules KVM et les désactiver si nécessaire
+echo "Vérification des modules KVM (kvm, kvm_intel, kvm_amd)..."
+KVM_MODULES=(kvm_intel kvm_amd kvm)
+KVM_PRESENT=false
+for m in "${KVM_MODULES[@]}"; do
+	if lsmod | grep -q "^$m"; then
+		KVM_PRESENT=true
+	fi
+done
+
+if [ "$KVM_PRESENT" = true ]; then
+	echo "Modules KVM détectés. Tentative de désactivation pour permettre l'utilisation de VirtualBox..."
+	sudo systemctl stop libvirtd.service 2>/dev/null || true
+	sudo systemctl disable --now libvirtd.service 2>/dev/null || true
+	sudo modprobe -r kvm_intel kvm_amd kvm 2>/dev/null || true
+	echo -e "blacklist kvm\nblacklist kvm_intel\nblacklist kvm_amd" | sudo tee /etc/modprobe.d/blacklist-kvm.conf >/dev/null
+	if command -v update-initramfs >/dev/null 2>&1; then
+		sudo update-initramfs -u -k all >/dev/null 2>&1 || true
+	fi
+	echo "KVM modules unloaded and blacklisted. A reboot is recommended for changes to take effect."
+fi
+
 # 1. Mise à jour du système et installation des dépendances de compilation
 # VirtualBox a besoin de gcc, make et perl pour compiler ses modules noyau
 echo "Mise à jour et installation des prérequis..."
